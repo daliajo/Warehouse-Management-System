@@ -1,0 +1,256 @@
+@model IEnumerable<WarehouseManagementSystem.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+    int totalProducts = ViewBag.TotalProducts;
+    string currentSort = ViewBag.SortOrder;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Products</h1>
+
+        <p class="text-muted mb-0">
+            Manage warehouse products.
+        </p>
+    </div>
+
+    <a asp-action="Create"
+       class="btn btn-primary">
+        Add Product
+    </a>
+</div>
+
+<form asp-action="Index"
+      method="get"
+      class="row g-2 mb-4">
+
+    <input type="hidden"
+           name="sortOrder"
+           value="@currentSort" />
+
+    <div class="col-md-6">
+        <input type="text"
+               name="searchTerm"
+               value="@ViewBag.SearchTerm"
+               class="form-control"
+               placeholder="Search by product or supplier name" />
+    </div>
+
+    <div class="col-auto">
+        <button type="submit"
+                class="btn btn-primary">
+            Search
+        </button>
+    </div>
+
+    <div class="col-auto">
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Clear
+        </a>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        @if (!string.IsNullOrWhiteSpace(ViewBag.SearchTerm))
+        {
+            <span>
+                No products matched your search.
+            </span>
+        }
+        else
+        {
+            <span>
+                No products have been added yet.
+            </span>
+        }
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-between
+                align-items-center mb-2">
+
+        <span class="text-muted">
+            @totalProducts product(s) found
+        </span>
+
+        @if (totalPages > 0)
+        {
+            <span class="text-muted">
+                Page @currentPage of @totalPages
+            </span>
+        }
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Image</th>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-searchTerm="@ViewBag.SearchTerm"
+                           asp-route-sortOrder="@ViewBag.NameSort"
+                           asp-route-page="1"
+                           class="table-sort-link">
+
+                            Name
+
+                            @if (currentSort == "name_asc")
+                            {
+                                <span>↑</span>
+                            }
+                            else if (currentSort == "name_desc")
+                            {
+                                <span>↓</span>
+                            }
+                        </a>
+                    </th>
+
+                    <th>Description</th>
+
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-searchTerm="@ViewBag.SearchTerm"
+                           asp-route-sortOrder="@ViewBag.PriceSort"
+                           asp-route-page="1"
+                           class="table-sort-link">
+
+                            Price
+
+                            @if (currentSort == "price_asc")
+                            {
+                                <span>↑</span>
+                            }
+                            else if (currentSort == "price_desc")
+                            {
+                                <span>↓</span>
+                            }
+                        </a>
+                    </th>
+
+                    <th>Quantity</th>
+                    <th>Supplier</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>
+    @if (!string.IsNullOrWhiteSpace(
+        product.ImageFileName))
+    {
+        <img src="/uploads/@product.ImageFileName"
+             alt="@product.Name"
+             class="product-thumbnail" />
+    }
+    else
+    {
+        <span class="text-muted">No image</span>
+    }
+</td>
+                        <td>@product.Name</td>
+
+                        <td>@product.Description</td>
+
+                        <td>
+                            @product.Price.ToString("0.00")
+                        </td>
+
+                        <td>@product.Quantity</td>
+
+                        <td>@product.Supplier?.Name</td>
+
+                        <td class="text-end">
+                            <div class="action-buttons">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@product.Id"
+                                   class="btn btn-sm btn-details">
+                                    Details
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@product.Id"
+                                   class="btn btn-sm btn-edit">
+                                    Edit
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@product.Id"
+                                   class="btn btn-sm btn-delete">
+                                    Delete
+                                </a>
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav aria-label="Products pagination"
+             class="mt-4">
+
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item
+                    @(currentPage == 1 ? "disabled" : "")">
+
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-searchTerm="@ViewBag.SearchTerm"
+                       asp-route-sortOrder="@currentSort"
+                       asp-route-page="@(currentPage - 1)">
+                        Previous
+                    </a>
+                </li>
+
+                @for (int pageNumber = 1;
+                      pageNumber <= totalPages;
+                      pageNumber++)
+                {
+                    <li class="page-item
+                        @(pageNumber == currentPage ? "active" : "")">
+
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-searchTerm="@ViewBag.SearchTerm"
+                           asp-route-sortOrder="@currentSort"
+                           asp-route-page="@pageNumber">
+
+                            @pageNumber
+                        </a>
+                    </li>
+                }
+
+                <li class="page-item
+                    @(currentPage == totalPages ? "disabled" : "")">
+
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-searchTerm="@ViewBag.SearchTerm"
+                       asp-route-sortOrder="@currentSort"
+                       asp-route-page="@(currentPage + 1)">
+                        Next
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    }
+}

@@ -1,0 +1,50 @@
+@model WarehouseManagementSystem.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+@if (!string.IsNullOrWhiteSpace(Model.ImageFileName))
+{
+    <div class="mb-4">
+        <img src="/uploads/@Model.ImageFileName"
+             alt="@Model.Name"
+             class="product-details-image" />
+    </div>
+}
+<h1>Product Details</h1>
+
+<hr />
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Name</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">Description</dt>
+            <dd class="col-sm-9">@Model.Description</dd>
+
+            <dt class="col-sm-3">Price</dt>
+            <dd class="col-sm-9">@Model.Price.ToString("0.00")</dd>
+
+            <dt class="col-sm-3">Quantity</dt>
+            <dd class="col-sm-9">@Model.Quantity</dd>
+
+            <dt class="col-sm-3">Supplier</dt>
+            <dd class="col-sm-9">@Model.Supplier?.Name</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit"
+       asp-route-id="@Model.Id"
+       class="btn btn-warning">
+        Edit
+    </a>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Back to List
+    </a>
+</div>

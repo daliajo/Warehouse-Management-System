@@ -1,0 +1,112 @@
+@model IEnumerable<WarehouseManagementSystem.Models.StockTransaction>
+
+@{
+    ViewData["Title"] = "Stock Transactions";
+}
+
+<div class="mb-4">
+    <h1>Stock Transactions</h1>
+
+    <p class="text-muted">
+        View all Stock In and Stock Out operations.
+    </p>
+</div>
+
+<form asp-action="Index"
+      method="get"
+      class="row g-3 mb-4">
+
+    <div class="col-md-5">
+        <label class="form-label">
+            Filter by Product
+        </label>
+
+        <select name="productId"
+                asp-items="ViewBag.ProductId"
+                class="form-select">
+
+            <option value="">
+                -- All Products --
+            </option>
+        </select>
+    </div>
+
+    <div class="col-md-auto d-flex align-items-end">
+        <button type="submit"
+                class="btn btn-primary">
+            Filter
+        </button>
+    </div>
+
+    <div class="col-md-auto d-flex align-items-end">
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Clear
+        </a>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No stock transactions were found.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Product</th>
+                    <th>Type</th>
+                    <th>Quantity</th>
+                    <th>Date</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var transaction in Model)
+                {
+                    <tr>
+                        <td>
+                            @transaction.Product?.Name
+                        </td>
+
+                        <td>
+                            @if (transaction.TransactionType ==
+                                StockTransactionType.In)
+                            {
+                                <span class="badge bg-success">
+                                    In
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">
+                                    Out
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @transaction.Quantity
+                        </td>
+
+                        <td>
+                            @(transaction.TransactionDate.ToString("dd/MM/yyyy hh:mm tt"))
+                        </td>
+
+                        <td>
+                            @(string.IsNullOrWhiteSpace(transaction.Notes)
+                                ? "-"
+                                : transaction.Notes)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

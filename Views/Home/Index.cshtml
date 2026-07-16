@@ -1,0 +1,185 @@
+@model IEnumerable<WarehouseManagementSystem.Models.StockTransaction>
+
+@using WarehouseManagementSystem.Models
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Warehouse Dashboard</h1>
+
+        <p class="text-muted mb-0">
+            Overview of products, suppliers and stock activity.
+        </p>
+    </div>
+</div>
+
+<div class="row g-3 mb-5">
+
+    <div class="col-md-6 col-xl-3">
+        <a asp-controller="Products"
+           asp-action="Index"
+           class="text-decoration-none">
+
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <p class="text-muted mb-2">
+                        Total Products
+                    </p>
+
+                    <h2 class="mb-0 text-primary">
+                        @ViewBag.TotalProducts
+                    </h2>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <a asp-controller="Suppliers"
+           asp-action="Index"
+           class="text-decoration-none">
+
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <p class="text-muted mb-2">
+                        Total Suppliers
+                    </p>
+
+                    <h2 class="mb-0 text-success">
+                        @ViewBag.TotalSuppliers
+                    </h2>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <a asp-controller="Products"
+           asp-action="Index"
+           class="text-decoration-none">
+
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <p class="text-muted mb-2">
+                        Total Stock Quantity
+                    </p>
+
+                    <h2 class="mb-0 text-info">
+                        @ViewBag.TotalStockQuantity
+                    </h2>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <a asp-controller="Products"
+           asp-action="Index"
+           class="text-decoration-none">
+
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <p class="text-muted mb-2">
+                        Low Stock Products
+                    </p>
+
+                    <h2 class="mb-0 text-danger">
+                        @ViewBag.LowStockProducts
+                    </h2>
+
+                    <small class="text-muted">
+                        Quantity below 5
+                    </small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="h4 mb-1">
+            Latest Transactions
+        </h2>
+
+        <p class="text-muted mb-0">
+            The latest 10 stock movements.
+        </p>
+    </div>
+
+    <a asp-controller="StockTransactions"
+       asp-action="Index"
+       class="btn btn-outline-primary">
+        View All
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No stock transactions have been recorded yet.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Product</th>
+                    <th>Type</th>
+                    <th>Quantity</th>
+                    <th>Date</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var transaction in Model)
+                {
+                    <tr>
+                        <td>
+                            @transaction.Product?.Name
+                        </td>
+
+                        <td>
+                            @if (transaction.TransactionType ==
+                                StockTransactionType.In)
+                            {
+                                <span class="badge bg-success">
+                                    Stock In
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">
+                                    Stock Out
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @transaction.Quantity
+                        </td>
+
+                        <td>
+                        @(transaction.TransactionDate.ToString("dd/MM/yyyy hh:mm tt"))
+                        </td>
+
+                        <td>
+                            @(string.IsNullOrWhiteSpace(transaction.Notes)
+                                ? "-"
+                                : transaction.Notes)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+}

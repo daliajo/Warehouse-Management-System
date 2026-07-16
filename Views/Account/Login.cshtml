@@ -1,0 +1,75 @@
+@model WarehouseManagementSystem.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5 col-lg-4">
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+
+                <div class="text-center mb-4">
+                    <div class="login-logo mb-3">
+                        W
+                    </div>
+
+                    <h1 class="h3">Warehouse Login</h1>
+
+                    <p class="text-muted">
+                        Enter your account information.
+                    </p>
+                </div>
+
+                <form asp-action="Login" method="post">
+
+                    <div asp-validation-summary="ModelOnly" 
+                         class="text-danger mb-3">
+                    </div> 
+                    @* ModelOnly means:show general model errors, but do not repeat the individual field errors here. *@
+
+                    <div class="mb-3">
+                        <label asp-for="Username"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Username"
+                               class="form-control"
+                               placeholder="Enter username" />
+
+                        <span asp-validation-for="Username"
+                              class="text-danger">
+                        </span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Password"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Password"
+                               class="form-control"
+                               placeholder="Enter password" />
+
+                        <span asp-validation-for="Password"
+                              class="text-danger">
+                        </span>
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-primary w-100">
+                        Login
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
