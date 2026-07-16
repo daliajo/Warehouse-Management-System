@@ -15,6 +15,23 @@ public class ApplicationDbContext : DbContext
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<StockTransaction> StockTransactions { get; set; }
+    public DbSet<AppUser> Users { get; set; }
+
+    protected override void OnModelCreating(
+        ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<StockTransaction>()
+        .Property(transaction => transaction.TransactionType)
+        .HasConversion<string>()
+        .HasMaxLength(3);
+
+        //to prevent duplicate usernames
+        modelBuilder.Entity<AppUser>()
+            .HasIndex(user => user.Username)
+            .IsUnique();
+    }
 }
 
 

@@ -41,7 +41,8 @@
 
                     <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
 
-                        @if (Context.Session.GetString("Username") != null)
+                        @* @if (Context.Session.GetString("Username") != null) *@
+                        @if (Context.Session.GetInt32("UserId") != null)
                         {
                             <li class="nav-item">
                                 <a class="nav-link"
@@ -84,11 +85,16 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="btn btn-outline-light"
-                                   asp-controller="Account"
-                                   asp-action="Logout">
+                                <form asp-controller="Account"
+                                asp-action="Logout"
+                                method="post"
+                                class="d-inline">
+
+                                <button type="submit"
+                                        class="nav-link btn btn-link">
                                     Logout
-                                </a>
+                                </button>
+                                </form>
                             </li>
                         }
 
