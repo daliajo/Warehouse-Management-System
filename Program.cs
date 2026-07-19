@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args); //creates builder
 //register services
 builder.Services.AddControllersWithViews(); //register MVC
 
-builder.Services.AddDistributedMemoryCache(); //register memory cache, this creates temporary memory storage inside the running application
 builder.Services.AddSession(); //register session, provides the Session feature that uses that storage
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => //This registers ApplicationDbContext with Dependency Injection

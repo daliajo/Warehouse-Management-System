@@ -113,7 +113,9 @@ public class ProductsController : Controller
     {
         if (id == null)
         {
-            return NotFound();
+            //return NotFound();
+            TempData["ErrorMessage"] = "Invalid request.";
+            return RedirectToAction(nameof(Index));
         }
 
         var product = await _context.Products
@@ -122,7 +124,9 @@ public class ProductsController : Controller
 
         if (product == null)
         {
-            return NotFound();
+            //return NotFound();
+            TempData["ErrorMessage"] = "Product not found.";
+            return RedirectToAction(nameof(Index));
         }
 
         return View(product);
@@ -180,14 +184,18 @@ public class ProductsController : Controller
     {
         if (id == null)
         {
-            return NotFound();
+            //return NotFound();
+            TempData["ErrorMessage"] = "Invalid request.";
+            return RedirectToAction(nameof(Index));
         }
 
         var product = await _context.Products.FindAsync(id);
 
         if (product == null)
         {
-            return NotFound();
+            //return NotFound();
+            TempData["ErrorMessage"] = "Product not found.";
+            return RedirectToAction(nameof(Index));
         }
 
         var model = new ProductFormViewModel
@@ -215,14 +223,18 @@ public class ProductsController : Controller
     {
         if (id != model.Id)
         {
-            return NotFound();
+            //return NotFound();
+        TempData["ErrorMessage"] = "Invalid product request.";
+        return RedirectToAction(nameof(Index));
         }
 
         var product = await _context.Products.FindAsync(id);
 
         if (product == null)
         {
-            return NotFound();
+            //return NotFound();
+        TempData["ErrorMessage"] = "Product not found.";
+        return RedirectToAction(nameof(Index));
         }
 
         ValidateImage(model.ImageFile);
@@ -268,7 +280,9 @@ public class ProductsController : Controller
     {
         if (id == null)
         {
-            return NotFound();
+            //return NotFound();
+        TempData["ErrorMessage"] = "Invalid request.";
+        return RedirectToAction(nameof(Index));
         }
 
         var product = await _context.Products
@@ -277,7 +291,9 @@ public class ProductsController : Controller
 
         if (product == null)
         {
-            return NotFound();
+            //return NotFound();
+        TempData["ErrorMessage"] = "Product not found.";
+        return RedirectToAction(nameof(Index));
         }
 
         return View(product);
@@ -292,7 +308,9 @@ public class ProductsController : Controller
 
         if (product == null)
         {
-            return NotFound();
+            //return NotFound();
+        TempData["ErrorMessage"] = "Product not found.";
+        return RedirectToAction(nameof(Index));
         }
 
         string? imageFileName = product.ImageFileName;
@@ -351,7 +369,7 @@ public class ProductsController : Controller
         }
     }
 
-    private async Task<string> SaveImageAsync( //SaveImageAsync saves the physical file and returns its generated filename.
+    private async Task<string> SaveImageAsync( //SaveImageAsync saves the physical file and returns its generated filename
         IFormFile imageFile)
     {
         string extension = Path

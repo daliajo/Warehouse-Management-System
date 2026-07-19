@@ -30,14 +30,18 @@ public class SuppliersController : Controller
     {
         if (id == null)
         {
-            return NotFound();
+            //return NotFound();
+        TempData["ErrorMessage"] = "Invalid request.";
+        return RedirectToAction(nameof(Index));
         }
 
         var supplier = await _context.Suppliers.FindAsync(id);
 
         if (supplier == null)
         {
-            return NotFound();
+           // return NotFound();
+        TempData["ErrorMessage"] = "Supplier not found.";
+        return RedirectToAction(nameof(Index));
         }
 
         return View(supplier);
@@ -72,14 +76,18 @@ public class SuppliersController : Controller
     {
         if (id == null)
         {
-            return NotFound();
+            //return NotFound();
+        TempData["ErrorMessage"] = "Invalid request.";
+        return RedirectToAction(nameof(Index));
         }
 
         var supplier = await _context.Suppliers.FindAsync(id); //existingSupplier is the actual database entity being tracked by EF Core
 
         if (supplier == null)
         {
-            return NotFound();
+            //return NotFound();
+        TempData["ErrorMessage"] = "Supplier not found.";
+        return RedirectToAction(nameof(Index));
         }
 
         return View(supplier);
@@ -92,7 +100,9 @@ public class SuppliersController : Controller
     {
         if (id != supplier.Id)
         {
-            return NotFound();
+           // return NotFound();
+        TempData["ErrorMessage"] = "Invalid request.";
+        return RedirectToAction(nameof(Index));
         }
 
         if (!ModelState.IsValid)
@@ -104,7 +114,9 @@ public class SuppliersController : Controller
 
         if (existingSupplier == null)
         {
-            return NotFound();
+            //return NotFound();
+        TempData["ErrorMessage"] = "Supplier not found.";
+        return RedirectToAction(nameof(Index));
         }
 
         existingSupplier.Name = supplier.Name;
@@ -122,14 +134,18 @@ public class SuppliersController : Controller
     {
         if (id == null)
         {
-            return NotFound();
+           // return NotFound();
+        TempData["ErrorMessage"] = "Invalid request.";
+        return RedirectToAction(nameof(Index));
         }
  
         var supplier = await _context.Suppliers.FindAsync(id);
 
         if (supplier == null)
         {
-            return NotFound();
+           // return NotFound();
+        TempData["ErrorMessage"] = "Supplier not found.";
+        return RedirectToAction(nameof(Index));
         }
 
         return View(supplier);
@@ -144,7 +160,9 @@ public class SuppliersController : Controller
 
         if (supplier == null)
         {
-            return NotFound();
+            //return NotFound();
+        TempData["ErrorMessage"] = "Supplier not found.";
+        return RedirectToAction(nameof(Index));
         }
 
         _context.Suppliers.Remove(supplier);

@@ -19,7 +19,7 @@ public class Product
     [Range(0, int.MaxValue, ErrorMessage = "Quantity cannot be negative.")]
     public int Quantity { get; set; }
 
-    [Range(1, int.MaxValue, ErrorMessage = "Please select a supplier.")]
+    //[Range(1, int.MaxValue, ErrorMessage = "Please select a supplier.")]
     public int SupplierId { get; set; }
 
     public string? ImageFileName { get; set; }

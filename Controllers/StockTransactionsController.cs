@@ -68,7 +68,9 @@ public class StockTransactionsController : Controller
 
         if (product == null)
         {
-            return NotFound();
+           // return NotFound();
+        TempData["ErrorMessage"] = "Product not found.";
+        return RedirectToAction(nameof(Index));
         }
 
         product.Quantity += model.Quantity;
@@ -118,7 +120,9 @@ public class StockTransactionsController : Controller
 
         if (product == null)
         {
-            return NotFound();
+            //return NotFound();
+             TempData["ErrorMessage"] = "Product not found.";
+             return RedirectToAction(nameof(Index));
         }
 
         if (model.Quantity > product.Quantity)

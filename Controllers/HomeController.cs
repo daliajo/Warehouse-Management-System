@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WarehouseManagementSystem.Data;
 using WarehouseManagementSystem.Filters;
-using WarehouseManagementSystem.Models;
+using WarehouseManagementSystem.ViewModels;
 
 namespace WarehouseManagementSystem.Controllers;
 
@@ -18,28 +18,39 @@ public class HomeController : Controller
     [SessionAuthorize]
     public async Task<IActionResult> Index()
     {
-        ViewBag.TotalProducts =
-            await _context.Products.CountAsync(); //counts database records
+        //query 1: calculates all product statistics in one SQL query
+        //to calculate multiple aggregate values over the same collection
+        var productStatistics = await _context.Products
+            .GroupBy(product => 1) //bc every product has the same key, all products are placed into one group
+            .Select(group => new
+            {
+                TotalProducts = group.Count(),
 
-        ViewBag.TotalSuppliers =
-            await _context.Suppliers.CountAsync();
+                TotalStockQuantity = group.Sum(product => product.Quantity),
 
-        ViewBag.TotalStockQuantity =
-            await _context.Products.SumAsync(
-                product => product.Quantity); //Adds the quantity of every product
+                LowStockProducts = group.Count(product => product.Quantity < 5)
+            }).FirstOrDefaultAsync();
 
-        ViewBag.LowStockProducts =
-            await _context.Products.CountAsync(
-                product => product.Quantity < 5); //Counts products whose quantity is less than 5
+        var model = new DashboardViewModel
+        {
+            TotalProducts = productStatistics?.TotalProducts ?? 0, //use TotalProducts when statistics exist,else use 0
 
-        var latestTransactions =
-            await _context.StockTransactions
-                .Include(transaction => transaction.Product)
-                .OrderByDescending(
-                    transaction => transaction.TransactionDate)
-                .Take(10) //takes the latest 10 transactions
-                .ToListAsync();
+            //query 2: counts all suppliers
+            //bc suppliers come from a different table
+            TotalSuppliers = await _context.Suppliers.CountAsync(),
 
-        return View(latestTransactions);
+            TotalStockQuantity = productStatistics?.TotalStockQuantity ?? 0,
+
+            LowStockProducts = productStatistics?.LowStockProducts ?? 0,
+
+            //query 3: retrieves the latest 10 transactions and their products
+            LatestTransactions = await _context.StockTransactions
+                    .Include(transaction => transaction.Product)
+                    .OrderByDescending(transaction => transaction.TransactionDate)
+                    .Take(10)
+                    .ToListAsync()
+        };
+
+        return View(model);
     }
 }

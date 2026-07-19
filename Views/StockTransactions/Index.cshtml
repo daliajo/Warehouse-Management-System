@@ -4,6 +4,13 @@
     ViewData["Title"] = "Stock Transactions";
 }
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <div class="mb-4">
     <h1>Stock Transactions</h1>
 
